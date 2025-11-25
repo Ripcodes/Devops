@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const http = require('http');
-// const socketIo = require('socket.io');
+const socketIo = require('socket.io');
 require('dotenv').config();
 
 const app = express();
@@ -23,7 +23,6 @@ const server = http.createServer(app);
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
-  "http://localhost:5174",
   process.env.CLIENT_URL
 ].filter(Boolean);
 
@@ -32,13 +31,13 @@ app.use(cors({
   credentials: true
 }));
 
-// const io = socketIo(server, {
-//   cors: {
-//     origin: allowedOrigins,
-//     methods: ["GET", "POST"],
-//     credentials: true
-//   }
-// });
+const io = socketIo(server, {
+  cors: {
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 
 
 // Middleware
@@ -60,7 +59,7 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/medgrid', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -68,7 +67,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 .catch(err => console.error('MongoDB connection error:', err));
 
 // Make io accessible to routes
-// app.set('io', io);
+app.set('io', io);
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -110,8 +109,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-
-
 // 404 handler (must come last)
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
@@ -130,4 +127,3 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`MedGrid server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV}`);
 });
-
