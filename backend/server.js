@@ -68,7 +68,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 .catch(err => console.error('MongoDB connection error:', err));
 
 // Make io accessible to routes
-app.set('io', io);
+// app.set('io', io);
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
