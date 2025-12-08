@@ -43,23 +43,23 @@ This entire infrastructure runs **locally**, making it perfect for labs, demos, 
 
 ```
 ┌─────────────────┐    ┌───────────────────┐     ┌───────────────────┐
-│ GitHub Repo     │    │ Jenkins (Local)   │     │  SonarQube        │
-│                 │───►│ Freestyle/CI/CD   │◄───►│ Static Analysis   │
-│ - Webhook Event │    │ Pipeline-as-Code  │     │ Quality Gate      │
+│ GitHub Repo        │     │ Jenkins (Local)      │     │   SonarQube           │
+│                    │───►│ Freestyle/CI/CD     │◄───►│ Static Analysis      │
+│ - Webhook Event    │     │ Pipeline-as-Code     │     │ Quality Gate          │
 └─────────────────┘    └─────────┬─────────┘     └───────────────────┘
-                                  │
-                                  ▼
+                                      │
+                                      ▼
+                         ┌──────────────────┐
+                         │ Nexus Repository    │
+                         │ - Artifacts         │
+                         │ - Versioning        │
+                         └───────┬──────────┘
+                                   │
+                                   ▼
                          ┌─────────────────┐
-                         │ Nexus Repository│
-                         │ - Artifacts     │
-                         │ - Versioning    │
-                         └───────┬─────────┘
-                                  │
-                                  ▼
-                         ┌─────────────────┐
-                         │ Local Server    │
-                         │ - Deploy App    │
-                         │ - Restart App   │
+                         │ Local Server        │
+                         │ - Deploy App        │
+                         │ - Restart App       │
                          └─────────────────┘
 ```
 
